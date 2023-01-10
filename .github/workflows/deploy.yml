@@ -33,6 +33,4 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
         env:
           GOOGLE_APPLICATION_CREDENTIALS: "${{ steps.auth_google_cloud.outputs.credentials_file_path }}"
-      - run: npm ci
-      - run: npm run build
       - run: npx firebase deploy --only=hosting
