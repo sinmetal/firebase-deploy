@@ -34,4 +34,5 @@ jobs:
         env:
           GOOGLE_APPLICATION_CREDENTIALS: "${{ steps.auth_google_cloud.outputs.credentials_file_path }}"
       - run: npm install -g firebase-tools
+      - run: ls -la
       - run: firebase deploy --project=firebase-deploy-20230110 --only=hosting
