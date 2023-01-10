@@ -28,7 +28,7 @@ jobs:
           access_token_lifetime: 1200s
           create_credentials_file: true
       - name: deploy
-        uses: gcr.iofirebase-deploy-20230110/firebase
+        uses: gcr.io/firebase-deploy-20230110/firebase
         env:
           GOOGLE_APPLICATION_CREDENTIALS: "${{ steps.auth_google_cloud.outputs.credentials_file_path }}"
       - run: firebase deploy --project=firebase-deploy-20230110 --only=hosting
