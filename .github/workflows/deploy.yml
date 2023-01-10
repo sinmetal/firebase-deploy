@@ -27,10 +27,8 @@ jobs:
           service_account: github-actions@firebase-deploy-20230110.iam.gserviceaccount.com
           access_token_lifetime: 1200s
           create_credentials_file: true
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ env.NODE_VERSION }}
+      - name: deploy
+        uses: gcr.iofirebase-deploy-20230110/firebase
         env:
           GOOGLE_APPLICATION_CREDENTIALS: "${{ steps.auth_google_cloud.outputs.credentials_file_path }}"
-      - run: npx firebase deploy --only=hosting
+      - run: firebase deploy --project=firebase-deploy-20230110 --only=hosting
