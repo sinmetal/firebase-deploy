@@ -1,0 +1,38 @@
+name: Deploy
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CLOUD_VERSION: "412.0.0"
+      NODE_VERSION: 18
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - uses: google-github-actions/setup-gcloud@v1
+        with:
+          version: ${{ env.GCLOUD_VERSION }}
+      - id: auth_google_cloud
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1.0.0
+        with:
+          workload_identity_provider: projects/608153103826/locations/global/workloadIdentityPools/github-actions/providers/gha-provider
+          service_account: github-actions@firebase-deploy-20230110.iam.gserviceaccount.com
+          access_token_lifetime: 1200s
+          create_credentials_file: true
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: "${{ steps.auth_google_cloud.outputs.credentials_file_path }}"
+      - run: npm ci
+      - run: npm run build
+      - run: npx firebase deploy --only=hosting
